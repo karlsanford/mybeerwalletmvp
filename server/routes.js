@@ -14,6 +14,8 @@ const initRoutes = (app, htmlDir) => {
     app.get('/login', (req,res) => {
         res.sendFile(htmlDir + 'login.html')
     })
+
+    app.post('/login', userCtrl.loginUser)
 }
 
 module.exports = {

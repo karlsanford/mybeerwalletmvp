@@ -9,7 +9,6 @@ const mongooseInit = require('./server/config/mongooseConfig.js')
 
 
 
-
 app.use(express.static(htmlDir))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended:true} ))
