@@ -13,6 +13,13 @@ app.use(express.static(htmlDir))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded( {extended:true} ))
 
+const middleWhere = (req, res, next) => {
+    console.log('middleWhere')
+    next()
+}
+
+app.use(middleWhere)
+
 //init routes
 routes.initRoutes(app, htmlDir)
 

@@ -1,5 +1,10 @@
+//require('dotenv').config()
+
 const User = require('../models/users')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+
 
 const validateRegForm = (formData) => {
     let errors = []
@@ -28,6 +33,13 @@ const registerUser = (req,res) => {
         //create user
         bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
             if(err) res.send(err)
+            let username = req.body.username
+            let authToken = createToken(username,['USER'],Date.now() + (10 * 60 * 1000))
+            let userObj = {
+                username,
+                password: hashedPassword,
+                authToken
+            }
             const newUser = new User({username:req.body.username,password:hashedPassword})
             newUser.save((err,user) => {
                 if(err) return console.error(err)
@@ -74,6 +86,22 @@ const loginUser = (req, res) => {
             
         }
     })
+}
+
+const createToken = (username, roles, expires) => {
+    let payload = {
+        username,
+        roles,
+        expires
+    }
+    let secret = env
+    let token =  jwt.sign(payload, secret)
+    console.log('token: ' + token)
+    return token
+}
+
+const validateToken = (jsonWebToken) => {
+    jwt.verify( jsonWebToken,process.env.ACCESS_TOKEN_SECRET)
 }
 
 module.exports = {
