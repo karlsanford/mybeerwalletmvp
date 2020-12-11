@@ -1,4 +1,4 @@
-//require('dotenv').config()
+require('dotenv').config()
 
 const User = require('../models/users')
 const bcrypt = require('bcrypt')
@@ -76,6 +76,7 @@ const loginUser = (req, res) => {
             bcrypt.compare(req.body.password,user.password)
             .then( (passwordsMatch) => {
                 if(passwordsMatch) {
+                    res.cookie('mycookiename','mycookievalue')
                     res.send('you have been logged in')
                 } else {
                     res.send('incorrect password')
@@ -94,7 +95,7 @@ const createToken = (username, roles, expires) => {
         roles,
         expires
     }
-    let secret = env
+    let secret = process.env.ACCESS_TOKEN_SECRET
     let token =  jwt.sign(payload, secret)
     console.log('token: ' + token)
     return token
